@@ -197,7 +197,13 @@ Use Power BI or similar tooling to:
 
 ## 11. Data source:
 
-https://www.kaggle.com/datasets/yasserh/walmart-dataset [Walmart.csv(363.73 kB)]
+Walmart.csv (363.73 kB)
+https://www.kaggle.com/datasets/yasserh/walmart-dataset
+
+License:
+
+CC0: Public Domain
+https://creativecommons.org/publicdomain/zero/1.0/
 
 ## 12. Repository Structure
 
