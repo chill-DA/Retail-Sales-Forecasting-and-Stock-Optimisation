@@ -20,7 +20,7 @@ ENV/
 
 # --- Data files ---
 data/raw/
-data/processed/
+data/clean/
 data/evaluation/
 data/*.csv
 data/*.xlsx
