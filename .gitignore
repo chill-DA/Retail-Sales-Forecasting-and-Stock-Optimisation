@@ -1,0 +1,57 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.so
+*.egg-info/
+*.egg
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# --- Virtual environments ---
+env/
+venv/
+.venv/
+ENV/
+
+# --- Data files ---
+data/raw/
+data/processed/
+data/evaluation/
+data/*.csv
+data/*.xlsx
+data/*.xls
+data/*.parquet
+
+# Allow small sample data
+!data/sample/
+
+# --- Model files ---
+models/
+*.joblib
+*.pkl
+*.h5
+
+# --- Logs ---
+logs/
+*.log
+
+# --- Operating system files ---
+.DS_Store
+Thumbs.db
+
+# --- IDE / Editor ---
+.vscode/
+.idea/
+
+# --- Python packaging ---
+build/
+dist/
+*.egg-info/
+
+# --- Other ---
+*.cache
