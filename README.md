@@ -1,5 +1,23 @@
 # Retail Demand Forecasting and Stock Optimisation for a Multi-Store Retailer
 
+<p align="left">
+
+  <!-- Languages and Libraries -->
+  <img alt="Python" src="https://img.shields.io/badge/Python-3.10+-blue?logo=python&logoColor=white">
+  <img alt="Pandas" src="https://img.shields.io/badge/Pandas-Data%20Analysis-blue?logo=pandas&logoColor=white">
+  <img alt="NumPy" src="https://img.shields.io/badge/NumPy-Scientific%20Computing-blue?logo=numpy&logoColor=white">
+  <img alt="Scikit-Learn" src="https://img.shields.io/badge/Scikit--Learn-Machine%20Learning-orange?logo=scikitlearn&logoColor=white">
+  <img alt="Matplotlib" src="https://img.shields.io/badge/Matplotlib-Visualisation-orange?logo=python&logoColor=white">
+  <img alt="Seaborn" src="https://img.shields.io/badge/Seaborn-Statistical%20Plots-teal?logo=python&logoColor=white">
+
+  <!-- Tools -->
+  <img alt="Jupyter" src="https://img.shields.io/badge/Jupyter-Notebooks-orange?logo=jupyter&logoColor=white">
+  <img alt="Git" src="https://img.shields.io/badge/Git-Version%20Control-red?logo=git&logoColor=white">
+  <img alt="GitHub" src="https://img.shields.io/badge/GitHub-Repository-black?logo=github&logoColor=white">
+
+</p>
+
+
 ## 1. Overview
 
 This project develops a data-driven forecasting approach to improve weekly sales predictions 
