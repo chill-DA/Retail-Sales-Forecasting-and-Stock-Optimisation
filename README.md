@@ -177,17 +177,21 @@ Use Power BI or similar tooling to:
 
 ---
 
-## 11. Repository Structure
+## 11. Data source:
+
+https://www.kaggle.com/datasets/yasserh/walmart-dataset [Walmart.csv(363.73 kB)]
+
+## 12. Repository Structure
 
 ```markdown
 project/
 │ README.md
 │ requirements.txt
 │
-├── data/
-│ ├── raw/
-│ ├── processed/
-│ └── clean/
+├── data/ (ignored)
+│ ├── raw/ (ignored)
+│ ├── processed/ (ignored)
+│ └── clean/ (ignored)
 │
 ├── notebooks/
 │ ├── 01_data_cleaning.ipynb
@@ -197,6 +201,6 @@ project/
 │ ├── 05_evaluation_reporting.ipynb
 │ └── 06_business_recommendations.ipynb
 │
-├── models/
-└── visuals/
+├── models/ (ignored)
+└── visuals/ (ignored)
 ```
