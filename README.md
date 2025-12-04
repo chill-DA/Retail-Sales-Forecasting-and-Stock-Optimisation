@@ -187,7 +187,7 @@ project/
 ├── data/
 │ ├── raw/
 │ ├── processed/
-│ └── evaluation/
+│ └── clean/
 │
 ├── notebooks/
 │ ├── 01_data_cleaning.ipynb
