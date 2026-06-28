@@ -1,230 +1,280 @@
 # Retail Demand Forecasting and Stock Optimisation for a Multi-Store Retailer
 
 <p align="left">
-
-  <!-- Languages and Libraries -->
   <img alt="Python" src="https://img.shields.io/badge/Python-3.10+-blue?logo=python&logoColor=white">
   <img alt="Pandas" src="https://img.shields.io/badge/Pandas-Data%20Analysis-blue?logo=pandas&logoColor=white">
   <img alt="NumPy" src="https://img.shields.io/badge/NumPy-Scientific%20Computing-blue?logo=numpy&logoColor=white">
   <img alt="Scikit-Learn" src="https://img.shields.io/badge/Scikit--Learn-Machine%20Learning-orange?logo=scikitlearn&logoColor=white">
   <img alt="Matplotlib" src="https://img.shields.io/badge/Matplotlib-Visualisation-orange?logo=python&logoColor=white">
   <img alt="Seaborn" src="https://img.shields.io/badge/Seaborn-Statistical%20Plots-teal?logo=python&logoColor=white">
-
-  <!-- Tools -->
-  <img alt="Jupyter" src="https://img.shields.io/badge/Jupyter-Notebooks-orange?logo=jupyter&logoColor=white">
-  <img alt="Git" src="https://img.shields.io/badge/Git-Version%20Control-red?logo=git&logoColor=white">
-  <img alt="GitHub" src="https://img.shields.io/badge/GitHub-Repository-black?logo=github&logoColor=white">
-
+  <img alt="Pytest" src="https://img.shields.io/badge/Pytest-Unit%20Tests-green?logo=pytest&logoColor=white">
 </p>
-
 
 ## 1. Overview
 
-This project develops a data-driven forecasting approach to improve weekly sales predictions 
-for a multi-store retailer. Using historical store-level sales data, the goal is to replace 
-manual spreadsheet forecasts with an accurate, automated model that supports smarter stock 
-management and reduces operational inefficiencies.
+This project develops a data-driven forecasting approach to improve weekly sales predictions for a multi-store retailer. Using historical store-level sales data, it compares a simple planning baseline against a machine learning model and translates the results into stock-risk and replenishment recommendations.
+
+The project is now split into two layers:
+
+1. **Notebook analysis** for EDA, modelling, evaluation and business storytelling.
+2. **Reusable Python modules** for feature engineering, metrics, model training and reproducible execution.
+
+This makes the repository stronger as a portfolio project because it shows both analytical thinking and production-adjacent project structure.
 
 ---
 
 ## 2. Problem Statement
 
-The retailer experienced frequent stockouts in high-demand weeks and excess stock on slow-moving 
-lines. Planners relied on manual, spreadsheet-based forecasts using simple averages that did not 
-capture short-term patterns, volatility or seasonal effects.
+The retailer experienced frequent stockouts in high-demand weeks and excess stock on slow-moving lines. Planners relied on manual, spreadsheet-based forecasts using simple averages that did not capture short-term patterns, volatility or seasonal effects.
 
 This resulted in:
 
-- Lost sales during peak periods  
-- High markdown costs  
-- Inefficient use of warehouse space  
-- Poor replenishment planning  
+- Lost sales during peak periods
+- High markdown costs
+- Inefficient use of warehouse space
+- Poor replenishment planning
 
 A more robust, data-driven forecasting method was required.
 
 ---
 
-## 3. Business Context
-
-- Multi-store retailer operating weekly replenishment cycles  
-- Limited warehouse capacity and rising inventory holding costs  
-- Increasing pressure to improve availability without increasing total stock  
-- Decision makers required reliable forecasts and clear identification of high-risk stores  
-
-### Stakeholders
-
-- Head of Merchandising  
-- Supply Chain Planning Team  
-- Store Operations Managers  
-
----
-
-## 4. Business Objectives
+## 3. Business Objectives
 
 1. Improve weekly sales forecast accuracy at store level.
 2. Identify stores with volatile or irregular demand that need special handling.
-3. Provide visibility of store-level risk: over forecasting, under forecasting and volatility.
-4. Quantify potential reductions in stockouts and excess inventory enabled by better forecasts.
+3. Provide visibility of store-level risk: over-forecasting, under-forecasting and volatility.
+4. Translate model output into replenishment and safety-stock recommendations.
 
 ---
 
-## 5. Data
+## 4. Data
 
 ### Source
-- Historical weekly store-level sales data (similar to the Walmart Sales Forecasting dataset).
-- Includes external variables such as fuel price, temperature, CPI and holiday flags.
+
+- Historical weekly store-level sales data similar to the Walmart Sales Forecasting dataset.
+- Includes external variables such as fuel price, temperature, CPI, unemployment and holiday flags.
+
+Original data source:
+
+- `Walmart.csv`
+- Kaggle dataset: `yasserh/walmart-dataset`
+- Licence: CC0 Public Domain
+
+The full raw dataset is not committed to the repository. A small synthetic/sample file is included so the code can be run immediately:
+
+```bash
+data/sample/walmart_sample.csv
+```
 
 ### Key Features Used in Modelling
-- Store ID  
-- Weekly sales  
-- Calendar features (date, month, week of year, year)  
-- Seasonality indicators (is month start/end, day of week)  
-- Lag features (1, 2 and 4 weeks)  
-- Rolling windows (4-week mean and standard deviation)  
-- External factors: holiday flag, temperature, fuel price, CPI, unemployment  
 
-All feature engineering was implemented in Python using a reproducible notebook pipeline.
+- Store ID
+- Weekly sales
+- Calendar features: year, month, week of year, day of week
+- Seasonality indicators: month start/end
+- Lag features: 1, 2 and 4 weeks
+- Rolling features: 4-week mean and standard deviation
+- External variables: holiday flag, temperature, fuel price, CPI, unemployment
+
+Rolling features are calculated from prior sales values only, so the current week's target does not leak into the predictor set.
 
 ---
 
-## 6. Approach
+## 5. Approach
 
-### 6.1 Data Preparation
+### 5.1 Data Preparation
 
-- Cleaned raw CSV data and validated column types.  
-- Standardised date formatting and sorted data by store and time.  
-- Engineered lag features and 4-week rolling statistics to capture demand patterns.  
-- Created a “model-ready” dataset by removing rows without sufficient history for lag features.
+- Cleaned raw CSV data and validated column types.
+- Standardised date formatting and sorted data by store and time.
+- Engineered calendar, lag and rolling-window features.
+- Created a model-ready dataset by removing rows without enough demand history.
 
-### 6.2 Exploratory Analysis
+### 5.2 Exploratory Analysis
 
-- Examined sales trends, seasonality patterns and store-level variability.  
-- Identified stable stores vs highly volatile stores.  
-- Computed store-level metrics such as weekly volatility and historical MAPE.  
-- Analysed distribution of forecasting errors to understand model reliability.
+- Examined sales trends, seasonality patterns and store-level variability.
+- Identified stable stores versus highly volatile stores.
+- Analysed model errors to understand operational risk.
 
-### 6.3 Forecast Modelling
+### 5.3 Forecast Modelling
 
 Forecasts were generated using:
 
-- **Baseline model:** naive lag-1 prediction  
-- **Machine learning model:** Random Forest Regressor using engineered features  
+- **Baseline model:** naive lag-1 forecast, equivalent to using last week's sales.
+- **Machine learning model:** Random Forest Regressor using engineered features.
 
 Models were evaluated using a time-based train-test split and the following metrics:
 
-- Mean Absolute Error (MAE)  
-- Root Mean Squared Error (RMSE)  
-- Mean Absolute Percentage Error (MAPE)  
-
-### 6.4 Stock Optimisation Logic
-
-Based on forecast behaviour and store-level error analysis:
-
-- Identified high-risk stores where the model consistently over forecasts (inventory inflation risk).
-- Identified volatile stores requiring higher safety stock.
-- Provided store segmentation to guide planners in applying differentiated ordering rules.
+- Mean Absolute Error (MAE)
+- Root Mean Squared Error (RMSE)
+- Mean Absolute Percentage Error (MAPE)
 
 ---
 
-## 7. Tools and Techniques Used
+## 6. Key Results
 
-- **Python:** data cleaning, feature engineering, forecasting models  
-- **Pandas, NumPy:** preprocessing and transformations  
-- **scikit-learn:** Random Forest model and evaluation  
-- **Matplotlib / Seaborn:** visualisation  
-- **Excel:** exploratory checks, planner-friendly summary tables  
-- **Power BI:** (optional) dashboard for forecast accuracy and store risk  
+From the notebook analysis:
 
----
+| Model | MAE | RMSE | MAPE |
+|---|---:|---:|---:|
+| Baseline lag-1 | 50,730.91 | 75,702.75 | 4.94% |
+| Random Forest | 36,792.57 | 55,665.33 | 3.52% |
 
-## 8. Key Insights
-
-(Real numbers included where available.)
-
-- The Random Forest model improved MAPE from **4.94 percent (baseline)** to **3.52 percent**, 
-  representing a **29 percent improvement** in forecast accuracy.
-- The 4-week rolling mean was the dominant predictor (importance: **0.94**), indicating weekly 
-  sales are highly stable and strongly driven by short-term patterns.
-- A small group of stores (e.g. **Stores 28, 14, 23, 17**) showed both high MAPE and strong 
-  positive bias, marking them as high operational risk due to consistent over forecasting.
-- Most stores achieved MAPE between **2 percent and 4 percent**, indicating strong model reliability.
-- Error distribution was heavily right-skewed, with the vast majority of predictions within 
-  **0–5 percent error**, and only occasional spikes due to volatile store behaviour.
+The Random Forest model improved MAPE from **4.94%** to **3.52%**, representing an approximate **29% reduction in percentage forecast error** compared with the naive baseline.
 
 ---
 
-## 9. Business Recommendations
+## 7. Business Recommendations
 
-### 1. Deploy the forecasting model across stable stores
-Most stores achieve highly accurate forecasts and can safely rely on automated predictions.
+### 1. Deploy automated forecasting for stable stores
 
-### 2. Apply targeted oversight to high-variance stores
-Stores with MAPE above 5 percent require:
-- Manual review  
-- Higher safety stock  
-- Localised adjustments  
+Stores with low forecast error can safely rely on automated predictions for weekly replenishment planning.
 
-### 3. Correct systematic over forecasting bias
-For stores showing consistent upward bias:
-- Apply simple post-model correction factors  
-- Avoid unnecessary overstocking  
+### 2. Apply targeted oversight to volatile stores
 
-### 4. Enhance the model with store-specific or external features
-Potential improvements:
-- Promotion indicators  
-- Holiday-specific variables  
-- Local event data  
-- Store clustering to personalise models  
+Stores with high MAPE or unstable demand should receive manual review, local context checks and potentially higher safety stock.
 
-### 5. Integrate forecasts into a dashboard
-Use Power BI or similar tooling to:
-- Monitor forecast accuracy  
-- Identify at-risk stores  
-- Support weekly replenishment decision making  
+### 3. Correct systematic over-forecasting
 
----
+Stores with persistent positive forecast bias should receive simple post-model correction factors to avoid inflated inventory.
 
-## 10. Impact
+### 4. Add richer operational features
 
-(Values to be finalised after end-to-end evaluation.)
+Potential next features include:
 
-- Forecast accuracy improved by **~29 percent** vs the manual baseline.
-- Improved inventory visibility across all stores.
-- Potential to reduce excess stock by **meaningful operational margins**, while improving availability.
-- Enabled planners to adopt a consistent, data-driven replenishment process.
+- Promotions
+- Local events
+- Stockout flags
+- Lead times
+- Store clusters
+- Product-level or department-level demand patterns
+
+### 5. Convert outputs into a dashboard
+
+A Power BI dashboard could monitor forecast accuracy, bias, volatile stores and replenishment risk. No `.pbix` file is included in this repository; this is listed as a future integration step.
 
 ---
 
-## 11. Data source:
+## 8. Repository Structure
 
-Walmart.csv (363.73 kB)
-https://www.kaggle.com/datasets/yasserh/walmart-dataset
-
-License:
-
-CC0: Public Domain
-https://creativecommons.org/publicdomain/zero/1.0/
-
-## 12. Repository Structure
-
-```markdown
+```text
 project/
-│ README.md
-│ requirements.txt
-│
-├── data/ (ignored)
-│ ├── raw/ (ignored)
-│ ├── processed/ (ignored)
-│ └── clean/ (ignored)
-│
+|
+├── README.md
+├── requirements.txt
+├── run_forecast_pipeline.py
+|
+├── data/
+│   └── sample/
+│       └── walmart_sample.csv
+|
 ├── notebooks/
-│ ├── 01_data_cleaning.ipynb
-│ ├── 02_feature_engineering.ipynb
-│ ├── 03_eda.ipynb
-│ ├── 04_modelling.ipynb
-│ ├── 05_evaluation_reporting.ipynb
-│ └── 06_business_recommendations.ipynb
-│
-├── models/ (ignored)
-└── visuals/ (ignored)
+│   ├── 01_data_cleaning.ipynb
+│   ├── 02_feature_engineering.ipynb
+│   ├── 03_eda.ipynb
+│   ├── 04_modelling.ipynb
+│   ├── 05_evaluation_reporting.ipynb
+│   └── 06_business_recommendations.ipynb
+|
+├── src/
+│   ├── __init__.py
+│   ├── config.py
+│   ├── features.py
+│   ├── metrics.py
+│   └── model.py
+|
+├── tests/
+│   ├── test_features.py
+│   └── test_metrics.py
+|
+├── reports/       # generated, ignored
+├── models/        # generated, ignored
+└── visuals/       # generated, ignored
 ```
+
+---
+
+## 9. How to Run
+
+### 1. Create and activate a virtual environment
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+On macOS/Linux:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+
+### 2. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Run the tests
+
+```bash
+pytest
+```
+
+### 4. Run the reproducible sample pipeline
+
+```bash
+python run_forecast_pipeline.py
+```
+
+This uses:
+
+```bash
+data/sample/walmart_sample.csv
+```
+
+and creates generated outputs in:
+
+```bash
+models/
+reports/
+```
+
+### 5. Run against the full Kaggle data
+
+Download the Kaggle CSV and run:
+
+```bash
+python run_forecast_pipeline.py --input data/raw/Walmart.csv
+```
+
+The raw data folder is ignored by Git to avoid committing external datasets.
+
+---
+
+## 10. Notebook Workflow
+
+The notebooks preserve the original analysis flow:
+
+1. `01_data_cleaning.ipynb` - raw data checks, cleaning and validation
+2. `02_feature_engineering.ipynb` - lag, rolling and calendar features
+3. `03_eda.ipynb` - trends, seasonality and store-level behaviour
+4. `04_modelling.ipynb` - baseline and Random Forest model comparison
+5. `05_evaluation_reporting.ipynb` - forecast interpretation and store-level risk
+6. `06_business_recommendations.ipynb` - operational recommendations
+
+The reusable `src/` modules make the same core logic easier to test, maintain and rerun outside the notebooks.
+
+---
+
+## 11. Portfolio Summary
+
+This project demonstrates:
+
+- Forecasting model evaluation against a planning baseline
+- Time-aware train/test splitting
+- Feature engineering for retail demand
+- Forecast accuracy measurement using MAE, RMSE and MAPE
+- Store-level operational risk interpretation
+- Practical stock-optimisation recommendations
+- Reproducible code structure with tests and a runnable sample pipeline
