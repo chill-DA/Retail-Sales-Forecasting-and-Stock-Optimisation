@@ -22,16 +22,21 @@ ENV/
 data/raw/
 data/clean/
 data/evaluation/
+data/processed/
 data/*.csv
 data/*.xlsx
 data/*.xls
 data/*.parquet
 
-# Allow small sample data
+# Allow small sample data used for reproducible demos
+data/sample/
 !data/sample/
+!data/sample/*.csv
 
-# --- Model files ---
+# --- Model and report outputs ---
 models/
+reports/
+visuals/
 *.joblib
 *.pkl
 *.h5
